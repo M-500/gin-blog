@@ -39,7 +39,7 @@ func Open(dbConfig DbConfig, config *gorm.Config, models ...interface{}) (err er
 
 	if config.NamingStrategy == nil {
 		config.NamingStrategy = schema.NamingStrategy{
-			TablePrefix:   "t_",
+			TablePrefix:   "blog_",
 			SingularTable: true,
 		}
 	}
