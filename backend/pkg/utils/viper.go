@@ -24,11 +24,11 @@ func InitViper() {
 	flag.StringVar(&filePath, "c", "", "input config file .")
 	flag.Parse()
 
-	if strs.IsBlank(filePath) {
+	if !strs.IsBlank(filePath) {
 		log.Printf("命令行读取参数, 配置文件路径为: %s\n", filePath)
 	} else {
 		log.Println("命令行参数为空, 默认加载: ./settings_dev.yml")
-		filePath = "./settings_dev.yml"
+		filePath = "settings_dev.yml"
 	}
 	// 目前读取固定固定路径的配置文件
 	v := viper.New()

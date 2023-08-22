@@ -8,14 +8,9 @@ JWT:
   Expire: 24 # 过期时间 (小时)
   Issuer: gin-vue-blog
 Mysql:
-  Host: 127.0.0.1
-  Port: "3306"
-  Config: "" # 其他配置, 例如时区
-  Dbname: wll-blog
-  Username: root
-  Password: "123456"
-  # 日志级别 silent, error, warn, info, 默认 info
-  LogMode: error # silent 相当于关闭日志
+  Url: root:123456@tcp(127.0.0.1:3306)/wll-blog?charset=utf8mb4&parseTime=True&loc=Local
+  MaxIdleConns: 50
+  MaxOpenConns: 200
 Email:
   To: ""
   From: "18574945291@163.com"

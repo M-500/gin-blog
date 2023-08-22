@@ -1,5 +1,7 @@
 package config
 
+import "backend/pkg/utils/sqls"
+
 //
 // @Description
 // @Author 代码小学生王木木
@@ -12,7 +14,7 @@ var Cfg Config
 type Config struct {
 	Server  Server
 	JWT     JWT
-	Mysql   Mysql
+	Mysql   sqls.DbConfig
 	Redis   Redis
 	Session Session
 	Email   Email
@@ -35,13 +37,11 @@ type JWT struct {
 }
 
 type Mysql struct {
-	Host     string // 服务器地址
-	Port     string // 端口
-	Config   string // 高级配置
-	Dbname   string // 数据库名
-	Username string // 数据库用户名
-	Password string // 数据库密码
-	LogMode  string // 日志级别
+	Url                    string `yaml:"Url"`
+	MaxIdleConns           int    `yaml:"MaxIdleConns"`
+	MaxOpenConns           int    `yaml:"MaxOpenConns"`
+	ConnMaxIdleTimeSeconds int    `yaml:"ConnMaxIdleTimeSeconds"`
+	ConnMaxLifetimeSeconds int    `yaml:"ConnMaxLifetimeSeconds"`
 }
 
 type Redis struct {
