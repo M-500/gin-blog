@@ -7,7 +7,7 @@
         target="__blank"
         hover="decoration-underline color-primary"
       >
-        Ronnie Zhang
+        linlinWu
       </a>
     </p>
     <p>
@@ -16,7 +16,7 @@
         target="__blank"
         hover="decoration-underline color-primary"
       >
-        赣ICP备2020015008号-1
+        湘ICP备2022007023号-1
       </a>
     </p>
   </footer>
