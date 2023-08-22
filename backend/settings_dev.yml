@@ -11,7 +11,7 @@ Mysql:
   Host: 127.0.0.1
   Port: "3306"
   Config: "" # 其他配置, 例如时区
-  Dbname: ginblog
+  Dbname: wll-blog
   Username: root
   Password: "123456"
   # 日志级别 silent, error, warn, info, 默认 info
