@@ -8,7 +8,7 @@
             <p text-16>Hello, {{ userStore.name }}</p>
             <p mt-5 text-12 op-60>今天又是元气满满的一天</p>
           </div>
-          <div ml-auto flex items-center>
+          <!-- <div ml-auto flex items-center>
             <n-statistic label="待办" :value="4">
               <template #suffix>/ 10</template>
             </n-statistic>
@@ -22,7 +22,7 @@
                 <img alt="forks" src="https://badgen.net/github/forks/zclzone/vue-naive-admin" />
               </a>
             </n-statistic>
-          </div>
+          </div> -->
         </div>
       </n-card>
 
@@ -32,7 +32,7 @@
         </template>
         <div flex flex-wrap justify-between>
           <n-card
-            v-for="i in 10"
+            v-for="i in 2"
             :key="i"
             class="mb-10 mt-10 w-300 flex-shrink-0 cursor-pointer"
             hover:card-shadow
