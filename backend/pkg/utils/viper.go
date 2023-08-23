@@ -4,11 +4,9 @@ import (
 	"backend/app/config"
 	"backend/pkg/utils/strs"
 	"flag"
-	"fmt"
+	"github.com/spf13/viper"
 	"log"
 	"strings"
-
-	"github.com/spf13/viper"
 )
 
 //
@@ -18,7 +16,8 @@ import (
 //
 
 // InitViper 初始化配置文件 优先级: 命令行 -> 默认值
-func InitViper() {
+func InitViper(path string) (*config.Config, error) {
+	var cfg *config.Config
 	// 根据命令号读取配置文件路径
 	var filePath string
 	flag.StringVar(&filePath, "c", "", "input config file .")
@@ -27,8 +26,8 @@ func InitViper() {
 	if !strs.IsBlank(filePath) {
 		log.Printf("命令行读取参数, 配置文件路径为: %s\n", filePath)
 	} else {
-		log.Println("命令行参数为空, 默认加载: ./settings_dev.yml")
-		filePath = "settings_dev.yml"
+		log.Println("命令行参数为空, 默认加载: ", path)
+		filePath = path
 	}
 	// 目前读取固定固定路径的配置文件
 	v := viper.New()
@@ -41,10 +40,10 @@ func InitViper() {
 	}
 
 	// 加载配置文件内容到结构体对象
-	if err := v.Unmarshal(&config.Cfg); err != nil {
+	if err := v.Unmarshal(&cfg); err != nil {
 		log.Panic("配置文件内容加载失败: ", err)
+		return nil, err
 	}
-	fmt.Println(config.Cfg.Email)
 	// TODO: 配置文件热重载, 使用场景是什么?
 	// v.WatchConfig()
 	// v.OnConfigChange(func(e fsnotify.Event) {
@@ -54,4 +53,5 @@ func InitViper() {
 	// 	}
 	// })
 	log.Println("配置文件内容加载成功")
+	return cfg, nil
 }

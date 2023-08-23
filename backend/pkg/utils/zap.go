@@ -18,25 +18,26 @@ import (
 
 var Logger *zap.Logger
 
-func InitLogger() {
+func InitLogger(zapCfg config.Zap) *zap.Logger {
 	// 生成日志文件目录
-	if ok, _ := files.PathExists(config.Cfg.Zap.Directory); !ok {
-		log.Printf("create %v directory\n", config.Cfg.Zap.Directory)
-		_ = os.Mkdir(config.Cfg.Zap.Directory, os.ModePerm)
+	if ok, _ := files.PathExists(zapCfg.Directory); !ok {
+		log.Printf("create %v directory\n", zapCfg.Directory)
+		_ = os.Mkdir(zapCfg.Directory, os.ModePerm)
 	}
-	core := zapcore.NewCore(getEncoder(), getWriterSyncer(), getLevelPriority())
+	core := zapcore.NewCore(getEncoder(zapCfg.Format), getWriterSyncer(zapCfg), getLevelPriority(zapCfg))
 	Logger = zap.New(core)
 
-	if config.Cfg.Zap.ShowLine {
+	if zapCfg.ShowLine {
 		// 获取 调用的文件, 函数名称, 行号
 		Logger = Logger.WithOptions(zap.AddCaller())
 	}
 
 	log.Println("Zap Logger 初始化成功")
+	return Logger
 }
 
 // 编码器: 如何写入日志
-func getEncoder() zapcore.Encoder {
+func getEncoder(format string) zapcore.Encoder {
 	// 参考: zap.NewProductionEncoderConfig()
 	encoderConfig := zapcore.EncoderConfig{
 		MessageKey:     "message",
@@ -52,18 +53,18 @@ func getEncoder() zapcore.Encoder {
 		EncodeCaller:   zapcore.FullCallerEncoder, // ?
 	}
 
-	if config.Cfg.Zap.Format == "json" {
+	if format == "json" {
 		return zapcore.NewConsoleEncoder(encoderConfig)
 	}
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
-// 日志输出路径: 文件、控制台、双向输出
-func getWriterSyncer() zapcore.WriteSyncer {
-	file, _ := os.Create(config.Cfg.Zap.Directory + "/log.log")
+// 日志输出路径: 文件、控制台、双向输出s
+func getWriterSyncer(zapCfg config.Zap) zapcore.WriteSyncer {
+	file, _ := os.Create(zapCfg.Directory + "/log.log")
 
 	// 双向输出
-	if config.Cfg.Zap.LogInConsole {
+	if zapCfg.LogInConsole {
 		fileWriter := zapcore.AddSync(file)
 		consoleWriter := zapcore.AddSync(os.Stdout)
 		return zapcore.NewMultiWriteSyncer(fileWriter, consoleWriter)
@@ -74,8 +75,8 @@ func getWriterSyncer() zapcore.WriteSyncer {
 }
 
 // 获取日志输出级别
-func getLevelPriority() zapcore.LevelEnabler {
-	switch config.Cfg.Zap.Level {
+func getLevelPriority(zapCfg config.Zap) zapcore.LevelEnabler {
+	switch zapCfg.Level {
 	case "debug", "Debug":
 		return zap.DebugLevel
 	case "info", "Info":
@@ -96,5 +97,5 @@ func getLevelPriority() zapcore.LevelEnabler {
 
 // 自定义日志输出时间格式
 func customTimeEncoder(t time.Time, encoder zapcore.PrimitiveArrayEncoder) {
-	encoder.AppendString(config.Cfg.Zap.Prefix + t.Format("2006/01/02 - 15:04:05"))
+	encoder.AppendString(t.Format("2006/01/02 - 15:04:05"))
 }

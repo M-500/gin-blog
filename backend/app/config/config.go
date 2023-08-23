@@ -8,8 +8,6 @@ import "backend/pkg/utils/sqls"
 // @Date 2023/8/22 11:48
 //
 
-var Cfg Config
-
 // 配置文件的结构体
 type Config struct {
 	Server  Server
@@ -28,6 +26,8 @@ type Server struct {
 	AppMode   string
 	BackPort  string
 	FrontPort string
+	Local     string
+	Host      string
 }
 
 type JWT struct {

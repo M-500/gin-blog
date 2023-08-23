@@ -2,7 +2,9 @@ package svc
 
 import (
 	"backend/app/config"
+	"backend/app/controller"
 	"backend/models"
+	"backend/pkg/utils"
 	"backend/pkg/utils/sqls"
 	"backend/pkg/utils/validators"
 	"github.com/gin-gonic/gin"
@@ -10,6 +12,7 @@ import (
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
@@ -35,6 +38,8 @@ type ServerContext struct {
 	MysqlConn *gorm.DB
 	// 翻译
 	Trans ut.Translator
+	// 日志对象
+	Logger *zap.Logger
 }
 
 // BeforeStart 启动之前必须要做得事情
@@ -56,8 +61,10 @@ func (s *ServerContext) BeforeStart() error {
 }
 
 func NewSerContext(path string) (svc *ServerContext) {
-	cfg := config.Cfg
-
+	cfg, err := utils.InitViper(path)
+	if err != nil {
+		panic(err)
+	}
 	gormLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
@@ -75,9 +82,10 @@ func NewSerContext(path string) (svc *ServerContext) {
 		return nil
 	}
 	return &ServerContext{
-		//Config: cfg,
+		Config:    cfg,
 		MysqlConn: sqls.DB(),
-		//Server: router.R
-		//Trans: validators.InitTrans(cfg.),
+		Server:    controller.RegisterRouter(),
+		Trans:     validators.InitTrans(cfg.Server.Local),
+		Logger:    utils.InitLogger(cfg.Zap),
 	}
 }

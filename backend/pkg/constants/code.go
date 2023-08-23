@@ -1,7 +1,7 @@
-package errs
+package constants
 
 //
 // @Description
 // @Author 代码小学生王木木
-// @Date 2023/8/22 10:54
+// @Date 2023/8/23 17:49
 //

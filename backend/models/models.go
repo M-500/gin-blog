@@ -12,7 +12,7 @@ import (
 //
 
 var Models = []interface{}{
-	&Article{}, &ArticleTag{}, &Category{},
+	&Article{},
 }
 
 type BaseModel struct {

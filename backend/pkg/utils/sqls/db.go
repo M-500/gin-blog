@@ -62,7 +62,6 @@ func Open(dbConfig DbConfig, config *gorm.Config, models ...interface{}) (err er
 
 	if err = db.AutoMigrate(models...); nil != err {
 		//log.Errorf("auto migrate tables failed: %s", err.Error())
-
 		log.Panic(err)
 	}
 	return

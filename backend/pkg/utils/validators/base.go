@@ -6,6 +6,7 @@ package validators
 // @Date 2023/8/22 16:38
 //
 import (
+	"backend/pkg/utils/strs"
 	"fmt"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
@@ -20,7 +21,11 @@ import (
 
 var InstanceTrans ut.Translator
 
-func InitTrans(locale string) ut.Translator {
+func InitTrans(local string) ut.Translator {
+	fmt.Println("日你妈", local)
+	if strs.IsBlank(local) {
+		local = "zh"
+	}
 	//修改gin框架中的validator引擎属性, 实现定制
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		//注册一个获取json的tag的自定义方法
@@ -36,13 +41,13 @@ func InitTrans(locale string) ut.Translator {
 		enT := en.New() //英文翻译器
 		//第一个参数是备用的语言环境，后面的参数是应该支持的语言环境
 		uni := ut.New(enT, zhT, zhT)
-		InstanceTrans, ok = uni.GetTranslator(locale)
+		InstanceTrans, ok = uni.GetTranslator(local)
 		if !ok {
 			//return fmt.Errorf("uni.GetTranslator(%s)", locale)
-			panic(any(fmt.Errorf("uni.GetTranslator(%s)", locale)))
+			panic(any(fmt.Errorf("uni.GetTranslator(%s)", local)))
 		}
 
-		switch locale {
+		switch local {
 		case "en":
 			entranslations.RegisterDefaultTranslations(v, InstanceTrans)
 		case "zh":
