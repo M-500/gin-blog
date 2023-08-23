@@ -1,8 +1,8 @@
 package main
 
 import (
+	"backend/app/config"
 	"backend/models"
-	"backend/pkg/config"
 	"backend/pkg/utils"
 	"backend/pkg/utils/sqls"
 	"fmt"

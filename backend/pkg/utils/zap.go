@@ -7,7 +7,7 @@ package utils
 //
 
 import (
-	"backend/pkg/config"
+	"backend/app/config"
 	"backend/pkg/utils/files"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

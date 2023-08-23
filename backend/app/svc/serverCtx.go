@@ -1,12 +1,20 @@
 package svc
 
 import (
-	"backend/pkg/config"
+	"backend/app/config"
+	"backend/models"
+	"backend/pkg/utils/sqls"
+	"backend/pkg/utils/validators"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"log"
+	"os"
+	"time"
 )
 
 //
@@ -29,7 +37,7 @@ type ServerContext struct {
 	Trans ut.Translator
 }
 
-// 启动之前必须要做得事情
+// BeforeStart 启动之前必须要做得事情
 func (s *ServerContext) BeforeStart() error {
 	// 1. 注册验证器
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
@@ -44,4 +52,32 @@ func (s *ServerContext) BeforeStart() error {
 		})
 	}
 	//
+	return nil
+}
+
+func NewSerContext(path string) (svc *ServerContext) {
+	cfg := config.Cfg
+
+	gormLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold:             time.Second, // 慢查询阈值
+			LogLevel:                  logger.Info,
+			IgnoreRecordNotFoundError: true,
+			Colorful:                  false, // 禁止彩色打印
+		},
+	)
+	gormConf := &gorm.Config{
+		Logger: gormLogger,
+	}
+	if err := sqls.Open(cfg.Mysql, gormConf, models.Models...); err != nil {
+		logrus.Error(err)
+		return nil
+	}
+	return &ServerContext{
+		//Config: cfg,
+		MysqlConn: sqls.DB(),
+		//Server: router.R
+		//Trans: validators.InitTrans(cfg.),
+	}
 }

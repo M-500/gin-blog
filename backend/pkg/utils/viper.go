@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"backend/pkg/config"
+	"backend/app/config"
 	"backend/pkg/utils/strs"
 	"flag"
 	"fmt"
